@@ -19,7 +19,7 @@ float printstatus = 0;
 float _angle = 0.0f;
 
 // actual vector representing the camera's direction
-float lx = 0.0f, ly = 5.0f, lz = 0.0f;
+float lx = 2.0f, ly = 2.0f, lz = 2.0f;
 
 static float _x = 0.0f;
 static float _y = 0.0f;
