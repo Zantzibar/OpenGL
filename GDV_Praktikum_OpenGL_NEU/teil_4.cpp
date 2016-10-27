@@ -334,7 +334,6 @@ bool countUp = true;
 
 void Animate(int value)
 {
-
 	// Hier werden Berechnungen durchgeführt, die zu einer Animation der Szene  
 	// erforderlich sind. Dieser Prozess läuft im Hintergrund und wird alle 
 	// 1000 msec aufgerufen. Der Parameter "value" wird einfach nur um eins 

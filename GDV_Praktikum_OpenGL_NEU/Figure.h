@@ -6,3 +6,4 @@ void body(GLfloat factor, double claw_arm, float engine_spin); // Körper der Dro
 void head(GLfloat factor); // 4 Dreiecke als Kopf
 void spinner(GLfloat fSeitenL);
 void ground();
+void drawtriangle();
