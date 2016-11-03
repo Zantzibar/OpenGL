@@ -242,7 +242,23 @@ void Wuerfel2(GLfloat fSeitenL, float red, float green, float blue)
 	return;
 }
 
-void ground() {
+void ground() 
+{
+	float fSeitenL = 20.0f;
+
+	//glTranslatef(0, 1.2, 0);
+	glBegin(GL_POLYGON);   //Bodenflaeche
+		glColor4f(0.51f, .55f, .51f, 1.0f); //SCHWARZ
+		glTexCoord2f(0.0f, 0.0f);
+		glVertex3f(-fSeitenL / 2.0f, 0, -fSeitenL / 2.0f);
+		glTexCoord2f(1.0f, 0.0f);
+		glVertex3f(+fSeitenL / 2.0f, 0, -fSeitenL / 2.0f);
+		glTexCoord2f(1.0f, 1.0f);
+		glVertex3f(+fSeitenL / 2.0f, 0, +fSeitenL / 2.0f);
+		glTexCoord2f(0.0f, 1.0f);
+		glVertex3f(-fSeitenL / 2.0f, 0, +fSeitenL / 2.0f);
+	glEnd();
+	return;
 	glLineWidth(0.5);
 	glBegin(GL_LINES);
 	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
@@ -299,57 +315,63 @@ void head(GLfloat factor) {
 	glPopMatrix();
 }
 
-void engine(GLfloat factor, float engine_spin) {
+void engine(GLfloat factor, float engine_spin) 
+{
 	glPushMatrix();						//bis hierhin Triebwerk x- z+
-	glRotatef(-90, 0, 1, 0);
-	glTranslatef(0.55*factor, 0.375*factor, 0.55*factor);
-	glRotatef(45, 0, 1, 0);
-	glScalef(0.15, 1., 0.15);
-	Wuerfel2(0.5*factor, 1, 1, 0);		//Triebwerk Gelb
-	glRotatef(engine_spin, 0, 1, 0);					//Spin Rotation
-	glTranslatef(0., 0.25*factor, 0.);
-	glScalef(2.55*factor, 0.01*factor, 2.55*factor);
-	spinner(1 * (factor/2));								//Spinner
+		glRotatef(-90, 0, 1, 0);
+		glTranslatef(0.55*factor, 0.375*factor, 0.55*factor);
+		glRotatef(45, 0, 1, 0);
+		glScalef(0.15, 1., 0.15);
+		Wuerfel2(0.5*factor, 1, 1, 0);		//Triebwerk Gelb
+		glRotatef(engine_spin, 0, 1, 0);					//Spin Rotation
+		glTranslatef(0., 0.25*factor, 0.);
+		glScalef(2.55*factor, 0.01*factor, 2.55*factor);
+		spinner(1 * (factor/2));								//Spinner
 	glPopMatrix();
+
 	glPushMatrix();
-	glRotatef(-90, 0, 1, 0);
-	glTranslatef(0.55*factor, 0.375*factor, 0.55*factor);
-	glScalef(0.15, 1., 0.15);
-	Wuerfel2(0.5*factor, 1, 0, 0);		//Triebwerk Rot
+		glRotatef(-90, 0, 1, 0);
+		glTranslatef(0.55*factor, 0.375*factor, 0.55*factor);
+		glScalef(0.15, 1., 0.15);
+		Wuerfel2(0.5*factor, 1, 0, 0);		//Triebwerk Rot
 	glPopMatrix();
+
 	glPushMatrix();						//bis hierhin Triebwerk x- z-
-	glRotatef(180, 0, 1, 0);
-	glTranslatef(0.55*factor, 0.375*factor, 0.55*factor);
-	glRotatef(45, 0, 1, 0);
-	glScalef(0.15, 1., 0.15);
-	Wuerfel2(0.5*factor, 1, 1, 0);		//Triebwerk Gelb
-	glRotatef(engine_spin, 0, 1, 0);					//Spin Rotation
-	glTranslatef(0., 0.25*factor, 0.);
-	glScalef(2.55*factor, 0.01*factor, 2.55*factor);
-	spinner(1 * (factor / 2));								//Spinner
+		glRotatef(180, 0, 1, 0);
+		glTranslatef(0.55*factor, 0.375*factor, 0.55*factor);
+		glRotatef(45, 0, 1, 0);
+		glScalef(0.15, 1., 0.15);
+		Wuerfel2(0.5*factor, 1, 1, 0);		//Triebwerk Gelb
+		glRotatef(engine_spin, 0, 1, 0);					//Spin Rotation
+		glTranslatef(0., 0.25*factor, 0.);
+		glScalef(2.55*factor, 0.01*factor, 2.55*factor);
+		spinner(1 * (factor / 2));								//Spinner
 	glPopMatrix();
+
 	glPushMatrix();
-	glRotatef(180, 0, 1, 0);
-	glTranslatef(0.55*factor, 0.375*factor, 0.55*factor);
-	glScalef(0.15, 1., 0.15);
-	Wuerfel2(0.5*factor, 1, 0, 0);		//Triebwerk Rot
+		glRotatef(180, 0, 1, 0);
+		glTranslatef(0.55*factor, 0.375*factor, 0.55*factor);
+		glScalef(0.15, 1., 0.15);
+		Wuerfel2(0.5*factor, 1, 0, 0);		//Triebwerk Rot
 	glPopMatrix();
+
 	glPushMatrix();						//bis hierhin Triebwerk x+ z-
-	glRotatef(90, 0, 1, 0);
-	glTranslatef(0.55*factor, 0.375*factor, 0.55*factor);
-	glRotatef(45, 0, 1, 0);
-	glScalef(0.15, 1., 0.15);
-	Wuerfel2(0.5*factor, 1, 1, 0);		//Triebwerk Gelb
-	glRotatef(engine_spin, 0, 1, 0);					//Spin Rotation
-	glTranslatef(0., 0.25*factor, 0.);
-	glScalef(2.55*factor, 0.01*factor, 2.55*factor);
-	spinner(1 * (factor / 2));								//Spinner
+		glRotatef(90, 0, 1, 0);
+		glTranslatef(0.55*factor, 0.375*factor, 0.55*factor);
+		glRotatef(45, 0, 1, 0);
+		glScalef(0.15, 1., 0.15);
+		Wuerfel2(0.5*factor, 1, 1, 0);		//Triebwerk Gelb
+		glRotatef(engine_spin, 0, 1, 0);					//Spin Rotation
+		glTranslatef(0., 0.25*factor, 0.);
+		glScalef(2.55*factor, 0.01*factor, 2.55*factor);
+		spinner(1 * (factor / 2));								//Spinner
 	glPopMatrix();
+
 	glPushMatrix();
-	glRotatef(90, 0, 1, 0);
-	glTranslatef(0.55*factor, 0.375*factor, 0.55*factor);
-	glScalef(0.15, 1., 0.15);
-	Wuerfel2(0.5*factor, 1, 0, 0);		//Triebwerk Rot
+		glRotatef(90, 0, 1, 0);
+		glTranslatef(0.55*factor, 0.375*factor, 0.55*factor);
+		glScalef(0.15, 1., 0.15);
+		Wuerfel2(0.5*factor, 1, 0, 0);		//Triebwerk Rot
 	glPopMatrix();
 	/*glPushMatrix();
 	glRotatef(75, 0, 0, 1);
@@ -357,36 +379,42 @@ void engine(GLfloat factor, float engine_spin) {
 	glScalef(0.15, 0.5, 0.05);
 	triangle(1 * factor, 1, 1, 1);
 	glPopMatrix();*/
+	
 	glPushMatrix();						//bis hierhin Triebwerk x+ z+
-	glTranslatef(0.55*factor, 0.375*factor, 0.55*factor);
-	glRotatef(45, 0, 1, 0);
-	glScalef(0.15, 1., 0.15);
-	Wuerfel2(0.5*factor, 1, 1, 0);						//Triebwerk Gelb
-	glRotatef(engine_spin, 0, 1, 0);					//Spin Rotation
-	glTranslatef(0.,0.25*factor,0.);
-	glScalef(2.55*factor, 0.01*factor, 2.55*factor);
-	spinner(1 * (factor / 2));								//Spinner
+		glTranslatef(0.55*factor, 0.375*factor, 0.55*factor);
+		glRotatef(45, 0, 1, 0);
+		glScalef(0.15, 1., 0.15);
+		Wuerfel2(0.5*factor, 1, 1, 0);						//Triebwerk Gelb
+		glRotatef(engine_spin, 0, 1, 0);					//Spin Rotation
+		glTranslatef(0.,0.25*factor,0.);
+		glScalef(2.55*factor, 0.01*factor, 2.55*factor);
+		spinner(1 * (factor / 2));								//Spinner
 	glPopMatrix();
+
 	glPushMatrix();
-	glTranslatef(0.55*factor, 0.375*factor, 0.55*factor);
-	glScalef(0.15, 1., 0.15);
-	Wuerfel2(0.5*factor, 1, 0, 0);		//Triebwerk Rot
+		glTranslatef(0.55*factor, 0.375*factor, 0.55*factor);
+		glScalef(0.15, 1., 0.15);
+		Wuerfel2(0.5*factor, 1, 0, 0);		//Triebwerk Rot
 	glPopMatrix();
 }
 
 void body(GLfloat factor, double claw_arm, float engine_spin)
 {
+
 	glPushMatrix();
-	engine(factor, engine_spin);		//Triebwerke
+		engine(factor, engine_spin);		//Triebwerke
 	glPopMatrix();
+	
 	glPushMatrix();
-	head(factor);		// Dreiecke (Dach)
+		head(factor);		// Dreiecke (Dach)
 	glPopMatrix();
+	
 	glPushMatrix();
-	glTranslatef(0., 0.375*factor, 0.); // Höhe bei Factor 1: 0,375 + 0,5 / 2 = 0,625
-	glScalef(2.5, 0.5, 2.5);
-	Wuerfel(0.5*factor);
+		glTranslatef(0., 0.375*factor, 0.); // Höhe bei Factor 1: 0,375 + 0,5 / 2 = 0,625
+		glScalef(2.5, 0.5, 2.5);
+		Wuerfel(0.5*factor);
 	glPopMatrix();
+	
 	glTranslatef(0., -0.125 * (factor / 2) * (0.5 * claw_arm / 0.5 * (factor / 2)) + 0.25 * (factor), 0.); //Höhe bei Factor 1: 0,5 /2 = 0,25 + 0,125 = 0,375
 	glScalef(0.5, 0.5*claw_arm*(factor /2), 0.5);	// y = 0.5 (default) Greifarm hier  darf im body nicht 1 sein
 	Wuerfel(0.5*factor);	//unterstes Quadrat

@@ -7,11 +7,8 @@
 #include <GL/freeglut.h>         //lädt alles für OpenGL
 //#include "wuerfel.h"
 #include <math.h>
-#include <glfw3.h>
 #include "Figure.h"
-
-GLfloat light_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };  /* Red diffuse light. */
-GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };  /* Infinite light location. */
+#include <SOIL.h>
 
 float fRotation = 315.0; // globale Variable :-(
 float fSpinner = 0;
@@ -22,19 +19,21 @@ float printstatus = 0;
 float _angle = 0.0f;
 
 // actual vector representing the camera's direction
-float lx = 2.0f, ly = 2.0f, lz = 2.0f;
+float lx = 5.0f, ly = 4.0f, lz = 5.0f;
 
-static float _x = 0.0f;
-static float _y = 0.0f;
-
-static float _r = 2.0f;
+static float _r = 1.0f;
 static float _a = 0.0f;
 
 bool first = true;
+bool m_bMove = false;
+int iTempMove = 0;
 
 static float _h = 0.0f;
 static float _v = 0.0f;
 static float _hoch = 0.0f;
+
+
+GLuint boden;
 
 using namespace std;
 
@@ -46,62 +45,81 @@ using namespace std;
 */
 float rotation = 0.0f;  // Lichtpositions-Rotation
 
+/**
+ * Grundlagen:
+ *	- Lichter bestehen aus einem ambienten, einem diffusen und einem spiegelnden Anteil. 
+ *	- Alle drei Anteile haben eine bestimmte Farbe. Diese wird im RGBA-Modell angegeben.
+ *	- Es werden mindestens acht Lichter (Light0 - Light7) unterstützt.
+ *	- ambientes Licht ist ungerichtetes Licht.
+ *	- diffuses Licht kommt aus einer bestimmten Richtung. Wenn es auf eine Oberfläche trifft, wird es in alle Richtungen gleichmässig gestreut.
+ *	- Der spiegelnde Lichtanteil kommt genau aus einer Richtung und wird in eine vorgegebene Richtung reflektiert. 
+ *	- Je nach Beschaffenheit der Oberfläche ergeben die reflektierten Strahlen an einer bestimmten Stelle ein Glanzlicht (Highlight).
+ *	
+ * Richtungslicht:
+ *	- eine Lichtquelle, die unendlich weit entfernt ist und deren Licht in eine bestimmte Richtung strahlt (z.B. die Sonne).
+ *	
+ * Punktlicht:
+ *	- eine Lichtquelle innerhalb der Szene, die in alle Richtungen gleichmässig strahlt. Vgl. Glühbirne. 
+ * 
+ * Spotlight:
+ *  - eingeschränkter Lichtkegel 
+ *  
+ *  
+ *  Wir nehmen ein Punktlicht (Glühbirne)
+ */
 void initLight()
 {
 	// Beleuchtung global einschalten
 	glEnable(GL_LIGHTING);
-
-	// Farben der Lichtquelle setzen (r,g,b,a)
-	GLfloat ambient[4] = { 0.1f, 0.0f, 0.0f, 1.0f };
-	GLfloat diffuse[4] = { 0.6f, 0.4f, 0.2f, 1.0f };
-	GLfloat specular[4] = { 0.6f, 0.6f, 0.4f, 1.0f };
-
 	glEnable(GL_LIGHT0);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
 
+	float light1_pos[] = { 1.0, .5, -0.45, 0.0 };				//Werte für Lichtposition
+	float light1_color_am[] = { 0.0, 0.0, 0.0, 0.0 };			//Werte für ambientes Licht
+	float light1_color_diff[] = { 0.51, 0.55, 0.51, 1.0 };		//Werte für diffuses Licht
+	float light1_color_spec[] = { 1.0f, 1.0f, 1.0f, 1.0f };     //Werte für spekuläres Licht
 
-	// Lichtposition setzen (x,y,z,w)
-	GLfloat position[4] =
-	{ 
-		cos(rotation), 0.5f, sin(rotation), 1.0f 
-	};
-	
-	glLightfv(GL_LIGHT0, GL_POSITION, position);
+	glShadeModel(GL_SMOOTH);							  //Schattierungsmodus auf SMOOTH (Verschmieren?)
+
+	glLightfv(GL_LIGHT1, GL_POSITION, light1_pos);
+	glLightfv(GL_LIGHT1, GL_AMBIENT, light1_color_am);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, light1_color_diff);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, light1_color_spec);
+
+	// Abschwächungsfaktor für die Lichtquelle
+	glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 0.0f);
+	glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.0f);
+	glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.0f);
+
+	glEnable(GL_LIGHTING);		// Lichtberechnungen verwenden
+	glEnable(GL_LIGHT0);		// Lichtquelle einschalten
+	glColorMaterial(GL_FRONT_AND_BACK, GL_EMISSION);
+	glEnable(GL_COLOR_MATERIAL);
 
 } // initLight()
 
-void initMaterial()
+void initTexture()
 {
-	// Materialfarben setzen (r,g,b,a)
-	GLfloat globalAmbient[4] = { 0.0, 0.0, 0.0, 1.0 };
-	GLfloat ambient[4] = { 1.0, 1.0, 1.0, 1.0 };
-	GLfloat diffuse[4] = { 1.0, 1.0, 1.0, 1.0 };
-	GLfloat specular[4] = { 1.0, 1.0, 1.0, 1.0 };
+	// bild fuer boden laden
+	boden = SOIL_load_OGL_texture("Bilder/boden1.jpg", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
+		SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT);
 
-	// Globale ambiente Beleuchtung
-	// komplett herunternehmen
-	glLightModelfv(GL_LIGHT_MODEL_AMBIENT,
-		globalAmbient);
-
-	// Materialparameter setzen
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
-	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 16.0f);
-
-} // initMaterial()
+}
 
 void Init()
 {
 	// Hier finden jene Aktionen statt, die zum Programmstart einmalig 
 	// durchgeführt werden müssen
 
+	initLight();
+	initTexture();
+
 	glEnable(GL_DEPTH_TEST);
 	glClearDepth(1.0);
 }
 
+
+float _xTMP = 5.0f;
+float _yTMP = 5.0f;
 
 // Maus-Bewegungen mit gedrueckter Maus-Taste
 void Motion(int x, int y)
@@ -109,55 +127,38 @@ void Motion(int x, int y)
 	if (first)
 	{
 		first = false;
-		_x = x;
-		_y = y;
+		_xTMP = x;
+		_yTMP = y;
 		return;
 	}
 
-	_a += (_x - x) * 0.01;
- 	_x = x;
+	_a += (_xTMP - x) * 0.01;
+ 	_xTMP = x;
 	
 	lx = _r*cos(_a);
 	lz = _r*sin(_a);
 
-	std::cout << "Maus: X -> " << lx << ", Y  -> " << lz << std::endl;
+	// std::cout << "Maus: X -> " << lx << ", Y  -> " << lz << std::endl;
 	// RenderScene aufrufen.
 	glutPostRedisplay();
 }
-
-// Maus-Bewegungen mit gedrueckter Maus-Taste
-void MotionPassive(int x, int y)
-{
-	return; 
-
-	if (first)
-	{
-		first = false;
-		_x = x;
-		_y = y;
-		return;
-	}
-
-	_a += (_x - x) * 0.01;
-	_x = x;
-
-	lx = _r*cos(_a);
-	lz = _r*sin(_a);
-
-	std::cout << "Maus: X -> " << lx << ", Y  -> " << lz << std::endl;
-	// RenderScene aufrufen.
-	glutPostRedisplay();
-}
-
 
 void MotionWheel(int button, int state, int x, int y)
 {
+	if (first)
+	{
+		first = false;
+		_xTMP = x;
+		_yTMP = y;
+		return;
+	}
+
 	// -1 = zurueck scrollen
 	// 1  = vorwaerts scrollen
 	float diff = state * 0.1;
 	ly += diff;
 	_r += diff; // radius erhoehen
-	Motion(_x, _y); // neue koordinaten fuer lx, und lz setzen
+	Motion(_xTMP, _yTMP); // neue koordinaten fuer lx, und lz setzen
 }
 
 void MotionP(int button, int state, int x, int y)
@@ -213,6 +214,16 @@ void processNormalKeys(unsigned char key, int xx, int yy)
 			_hoch += 0.2;
 		}break;
 
+		case 'g':
+		{
+			iTempMove = 0;
+			// todo fahr ne route
+			if (m_bMove)
+				m_bMove = false;
+			else
+				m_bMove = true;
+		}break;
+
 		case 27:
 			exit(0);
 			break;
@@ -220,6 +231,8 @@ void processNormalKeys(unsigned char key, int xx, int yy)
 	if (key == 27)
 		exit(0);
 }
+
+float rotateMove = 0.0f;
 
 
 void RenderScene() //Zeichenfunktion
@@ -241,16 +254,20 @@ void RenderScene() //Zeichenfunktion
 	gluLookAt(//1, x, 1,
 		lx, ly, lz,
 		0,0,0,
-		0.0f, 1.0f, 0.0f);
+		0.0f, 0.5f, 0.0f);
 	
 	//glEnable(GL_LIGHTING);
 	coordinatesystem();
-	ground();
 	
-	initLight();
+	// textur einblenden
+	glPushMatrix();
+		glBindTexture(GL_TEXTURE_2D, boden);
+		glEnable(GL_TEXTURE_2D);
+		ground();
+		glDisable(GL_TEXTURE_2D);
+	glPopMatrix();
 
 	glTranslatef(_v, _hoch, _h);
-	
 	
 	// Teapot
 	glPushMatrix();	// Einheitsmatrix (0,0,0) auf Stack
@@ -288,7 +305,9 @@ void RenderScene() //Zeichenfunktion
 		centerx, centery, centerz, // Betrachtete Position
 		upx, upy, upz); // Kamera-View-Up-Vektor
 		*/
-		//glRotatef(fRotation, 0, 1, 0);	// Rotation an der y Achse
+		if(m_bMove)
+			glRotatef(rotateMove, 0, 1, 0);	// Rotation an der y Achse
+		
 		body(2, fLenght / 100, fSpinner);
 
 		//glTranslatef(0, 0, -0.5);
@@ -296,7 +315,6 @@ void RenderScene() //Zeichenfunktion
 
 	glFlush();  // Sofort anfangen mit Zeichnen
 	glFinish();	// erst anzeigen wenn vollständig gezeichnet
-
 
 
 	glutSwapBuffers();
@@ -331,9 +349,49 @@ void Reshape(int w, int h)
 }
 
 bool countUp = true;
+bool countUp2 = true;
 
 void Animate(int value)
 {
+	int limit1 = 100;
+	int limit2 = 200;
+	int limit3 = 300;
+	int limit4 = 400;
+
+	if (m_bMove)
+	{
+		if(iTempMove > 0 && iTempMove < limit1)
+			_v += 0.05;
+		else if(iTempMove > limit1 && iTempMove < limit2)
+			_h += 0.05;
+		else if (iTempMove > limit2 && iTempMove < limit3)
+			_v -= 0.05;
+		else if (iTempMove > limit3 && iTempMove < limit4)
+			_h -= 0.05;
+		else if(iTempMove > limit4)
+		{
+			if (countUp2) 
+			{
+				_hoch += 0.1;
+				if (_hoch >= 10)
+					countUp2 = false;
+			}
+			else
+			{
+				_hoch -= 0.1;
+				rotateMove += 1.0;
+				if (_hoch < 0)
+				{
+					countUp2 = true;
+				}
+			}
+			
+			cout << _hoch << endl;
+		}
+
+		iTempMove++;
+	}
+
 	// Hier werden Berechnungen durchgeführt, die zu einer Animation der Szene  
 	// erforderlich sind. Dieser Prozess läuft im Hintergrund und wird alle 
 	// 1000 msec aufgerufen. Der Parameter "value" wird einfach nur um eins 
@@ -381,7 +439,7 @@ int main(int argc, char **argv)
 	glutInit(&argc, argv);                // GLUT initialisieren
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowPosition(100, 100);
-	glutInitWindowSize(600, 600);         // Fenster-Konfiguration
+	glutInitWindowSize(1000, 600);         // Fenster-Konfiguration
 	glutCreateWindow("Christian Hesse; Patrick Zantz");   // Fenster-Erzeugung
 	
 	glutDisplayFunc(RenderScene);         // Zeichenfunktion bekannt machen
@@ -394,7 +452,6 @@ int main(int argc, char **argv)
 	glutMouseWheelFunc(MotionWheel);
 	glutMouseFunc(MotionP);   //NEU
 	glutMotionFunc(Motion);   //NEU
-	glutPassiveMotionFunc(MotionPassive);
 
 	// TimerCallback registrieren; wird nach 10 msec aufgerufen mit Parameter 0  
 	glutTimerFunc(10, Animate, 0);

@@ -21,28 +21,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="teil_1.cpp">
-      <Filter>Source Files\c++</Filter>
-    </ClCompile>
     <ClCompile Include="Wuerfel.cpp">
-      <Filter>Source Files\c++</Filter>
-    </ClCompile>
-    <ClCompile Include="teil_3.cpp">
-      <Filter>Source Files\c++</Filter>
-    </ClCompile>
-    <ClCompile Include="teil_2.cpp">
       <Filter>Source Files\c++</Filter>
     </ClCompile>
     <ClCompile Include="teil_4.cpp">
       <Filter>Source Files\c++</Filter>
     </ClCompile>
-    <ClCompile Include="MouseMotion.cpp">
-      <Filter>Source Files\c++</Filter>
-    </ClCompile>
     <ClCompile Include="Wuerfel_mit_Normalen.cpp">
-      <Filter>Source Files\c++</Filter>
-    </ClCompile>
-    <ClCompile Include="MouseFunc.cpp">
       <Filter>Source Files\c++</Filter>
     </ClCompile>
     <ClCompile Include="Figure.cpp">

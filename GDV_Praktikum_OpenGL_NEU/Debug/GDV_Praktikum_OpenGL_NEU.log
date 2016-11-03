@@ -1,0 +1,32 @@
+﻿  0 Datei(en) kopiert
+  0 Datei(en) kopiert
+  teil_4.cpp
+d:\hda\2016_ws\gdv\svn\gdv_praktikum_opengl_neu\teil_4.cpp(76): warning C4838: Konvertierung von "double" zu "float" erfordert eine einschränkende Konvertierung
+d:\hda\2016_ws\gdv\svn\gdv_praktikum_opengl_neu\teil_4.cpp(76): warning C4305: "Initialisierung": Verkürzung von "double" in "float"
+d:\hda\2016_ws\gdv\svn\gdv_praktikum_opengl_neu\teil_4.cpp(78): warning C4838: Konvertierung von "double" zu "float" erfordert eine einschränkende Konvertierung
+d:\hda\2016_ws\gdv\svn\gdv_praktikum_opengl_neu\teil_4.cpp(78): warning C4305: "Initialisierung": Verkürzung von "double" in "float"
+d:\hda\2016_ws\gdv\svn\gdv_praktikum_opengl_neu\teil_4.cpp(130): warning C4244: "=": Konvertierung von "int" in "float", möglicher Datenverlust
+d:\hda\2016_ws\gdv\svn\gdv_praktikum_opengl_neu\teil_4.cpp(131): warning C4244: "=": Konvertierung von "int" in "float", möglicher Datenverlust
+d:\hda\2016_ws\gdv\svn\gdv_praktikum_opengl_neu\teil_4.cpp(135): warning C4244: "+=": Konvertierung von "double" in "float", möglicher Datenverlust
+d:\hda\2016_ws\gdv\svn\gdv_praktikum_opengl_neu\teil_4.cpp(136): warning C4244: "=": Konvertierung von "int" in "float", möglicher Datenverlust
+d:\hda\2016_ws\gdv\svn\gdv_praktikum_opengl_neu\teil_4.cpp(151): warning C4244: "=": Konvertierung von "int" in "float", möglicher Datenverlust
+d:\hda\2016_ws\gdv\svn\gdv_praktikum_opengl_neu\teil_4.cpp(152): warning C4244: "=": Konvertierung von "int" in "float", möglicher Datenverlust
+d:\hda\2016_ws\gdv\svn\gdv_praktikum_opengl_neu\teil_4.cpp(158): warning C4244: "Initialisierung": Konvertierung von "double" in "float", möglicher Datenverlust
+d:\hda\2016_ws\gdv\svn\gdv_praktikum_opengl_neu\teil_4.cpp(161): warning C4244: "Argument": Konvertierung von "float" in "int", möglicher Datenverlust
+d:\hda\2016_ws\gdv\svn\gdv_praktikum_opengl_neu\teil_4.cpp(188): warning C4305: "+=": Verkürzung von "double" in "float"
+d:\hda\2016_ws\gdv\svn\gdv_praktikum_opengl_neu\teil_4.cpp(193): warning C4305: "+=": Verkürzung von "double" in "float"
+d:\hda\2016_ws\gdv\svn\gdv_praktikum_opengl_neu\teil_4.cpp(198): warning C4305: "-=": Verkürzung von "double" in "float"
+d:\hda\2016_ws\gdv\svn\gdv_praktikum_opengl_neu\teil_4.cpp(204): warning C4305: "-=": Verkürzung von "double" in "float"
+d:\hda\2016_ws\gdv\svn\gdv_praktikum_opengl_neu\teil_4.cpp(209): warning C4305: "-=": Verkürzung von "double" in "float"
+d:\hda\2016_ws\gdv\svn\gdv_praktikum_opengl_neu\teil_4.cpp(214): warning C4305: "+=": Verkürzung von "double" in "float"
+d:\hda\2016_ws\gdv\svn\gdv_praktikum_opengl_neu\teil_4.cpp(330): warning C4244: "Initialisierung": Konvertierung von "double" in "float", möglicher Datenverlust
+d:\hda\2016_ws\gdv\svn\gdv_praktikum_opengl_neu\teil_4.cpp(364): warning C4305: "+=": Verkürzung von "double" in "float"
+d:\hda\2016_ws\gdv\svn\gdv_praktikum_opengl_neu\teil_4.cpp(366): warning C4305: "+=": Verkürzung von "double" in "float"
+d:\hda\2016_ws\gdv\svn\gdv_praktikum_opengl_neu\teil_4.cpp(368): warning C4305: "-=": Verkürzung von "double" in "float"
+d:\hda\2016_ws\gdv\svn\gdv_praktikum_opengl_neu\teil_4.cpp(370): warning C4305: "-=": Verkürzung von "double" in "float"
+d:\hda\2016_ws\gdv\svn\gdv_praktikum_opengl_neu\teil_4.cpp(375): warning C4305: "+=": Verkürzung von "double" in "float"
+d:\hda\2016_ws\gdv\svn\gdv_praktikum_opengl_neu\teil_4.cpp(381): warning C4305: "-=": Verkürzung von "double" in "float"
+d:\hda\2016_ws\gdv\svn\gdv_praktikum_opengl_neu\teil_4.cpp(409): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
+d:\hda\2016_ws\gdv\svn\gdv_praktikum_opengl_neu\teil_4.cpp(411): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
+  GDV_Praktikum_OpenGL_NEU.vcxproj -> D:\HDA\2016_WS\GDV\svn\Debug\GDV_Praktikum_OpenGL_NEU.exe
+  GDV_Praktikum_OpenGL_NEU.vcxproj -> D:\HDA\2016_WS\GDV\svn\Debug\GDV_Praktikum_OpenGL_NEU.pdb (Full PDB)
