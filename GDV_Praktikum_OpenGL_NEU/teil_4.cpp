@@ -10,6 +10,9 @@
 #include <glfw3.h>
 #include "Figure.h"
 
+GLfloat light_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };  /* Red diffuse light. */
+GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };  /* Infinite light location. */
+
 float fRotation = 315.0; // globale Variable :-(
 float fSpinner = 0;
 float fLenght = 0;
@@ -35,6 +38,61 @@ static float _hoch = 0.0f;
 
 using namespace std;
 
+
+/*
+	Es gibt 8 Lichtquellen in OpenGL. Wir schalten die erste an. (GL_LIGHT0)
+
+	aus http://www.foerterer.com/cpp/licht/teekanne.htm
+*/
+float rotation = 0.0f;  // Lichtpositions-Rotation
+
+void initLight()
+{
+	// Beleuchtung global einschalten
+	glEnable(GL_LIGHTING);
+
+	// Farben der Lichtquelle setzen (r,g,b,a)
+	GLfloat ambient[4] = { 0.1f, 0.0f, 0.0f, 1.0f };
+	GLfloat diffuse[4] = { 0.6f, 0.4f, 0.2f, 1.0f };
+	GLfloat specular[4] = { 0.6f, 0.6f, 0.4f, 1.0f };
+
+	glEnable(GL_LIGHT0);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
+
+
+	// Lichtposition setzen (x,y,z,w)
+	GLfloat position[4] =
+	{ 
+		cos(rotation), 0.5f, sin(rotation), 1.0f 
+	};
+	
+	glLightfv(GL_LIGHT0, GL_POSITION, position);
+
+} // initLight()
+
+void initMaterial()
+{
+	// Materialfarben setzen (r,g,b,a)
+	GLfloat globalAmbient[4] = { 0.0, 0.0, 0.0, 1.0 };
+	GLfloat ambient[4] = { 1.0, 1.0, 1.0, 1.0 };
+	GLfloat diffuse[4] = { 1.0, 1.0, 1.0, 1.0 };
+	GLfloat specular[4] = { 1.0, 1.0, 1.0, 1.0 };
+
+	// Globale ambiente Beleuchtung
+	// komplett herunternehmen
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT,
+		globalAmbient);
+
+	// Materialparameter setzen
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
+	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 16.0f);
+
+} // initMaterial()
+
 void Init()
 {
 	// Hier finden jene Aktionen statt, die zum Programmstart einmalig 
@@ -42,8 +100,8 @@ void Init()
 
 	glEnable(GL_DEPTH_TEST);
 	glClearDepth(1.0);
-
 }
+
 
 // Maus-Bewegungen mit gedrueckter Maus-Taste
 void Motion(int x, int y)
@@ -167,8 +225,6 @@ void processNormalKeys(unsigned char key, int xx, int yy)
 void RenderScene() //Zeichenfunktion
 {
 	// Hier befindet sich der Code der in jedem Frame ausgefuehrt werden muss
-	
-	
 	glClearColor(1, 0.5, 0, 0); // orange
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
@@ -181,42 +237,49 @@ void RenderScene() //Zeichenfunktion
 	//gluLookAt(1., 0., 0., 0., 0., 0., 0., 1., 0.); // von rechts 
 	//gluLookAt(1., 1., 1., 0., 0., 0., 0., 1., 0.); // von rechts oben
 
-//	std::cout << "Richtung der Kamera: X -> " << lx << ", Z -> " << lz << std::endl;
-	
 	// kamera anpassen
 	gluLookAt(//1, x, 1,
 		lx, ly, lz,
 		0,0,0,
 		0.0f, 1.0f, 0.0f);
 	
-	/*
-	glBegin(GL_LINES);
-		// X-Achse, rot
-		glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-		glVertex3d(0.0, 0.0, 0.0);
-		glVertex3d(1.0, 0.0, 0.0);
-		// Y-Achse, grün
-		glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-		glVertex3d(0.0, 0.0, 0.0);
-		glVertex3d(0.0, 1.0, 0.0);
-		// Z-Achse, blau
-		glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
-		glVertex3d(0.0, 0.0, 0.0);
-		glVertex3d(0.0, 0.0, 1.0);
-	glEnd();
-	*/
 	//glEnable(GL_LIGHTING);
 	coordinatesystem();
 	ground();
+	
+	initLight();
+
+	glTranslatef(_v, _hoch, _h);
+	
+	
 	// Teapot
 	glPushMatrix();	// Einheitsmatrix (0,0,0) auf Stack
-		glTranslatef(_v, _hoch, _h);
-		//glutWireTeapot(0.2);
+
+		//drawtriangle(); 
+
+	/*
+		GLfloat mat_amb_diff[] = { 0.1, 0.5, 0.8, 1.0 };
+		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE,
+			mat_amb_diff);
+
+		
+		GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+		GLfloat low_shininess[] = { 5.0 };
+		glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+		glMaterialfv(GL_FRONT, GL_SHININESS, low_shininess);
+
+		
+
+		GLfloat mat_emission[] = { 0.3, 0.2, 0.2, 0.0 };
+		glMaterialfv(GL_FRONT, GL_EMISSION, mat_emission);
+*/
+
+	//glutWireTeapot(0.2);
 		//glRotatef(_angle_z, 0.0f, 0.0f, 1.0f); //rotating object continuously by 2 degree
 		//glRotatef(_angle, 0.0f, 1.0f, 0.0f); //rotating object continuously by 2 degree
 		//glRotatef(_angle, 0.0f, 0.0f, 1.0f); //rotating object continuously by 2 degree
 		//glTranslatef(0, 0, 0.2);
-		glScalef(1, 1, 1);
+		//glScalef(2, 1, 1);
 		//glTranslatef(0,0,-0.1);
 		//glPushMatrix(); //Matrix wird auf den Stack gesichert
 		//glPopMatrix(); //Matrix wird vom Stack geholt und gesetzt
@@ -271,7 +334,6 @@ bool countUp = true;
 
 void Animate(int value)
 {
-
 	// Hier werden Berechnungen durchgeführt, die zu einer Animation der Szene  
 	// erforderlich sind. Dieser Prozess läuft im Hintergrund und wird alle 
 	// 1000 msec aufgerufen. Der Parameter "value" wird einfach nur um eins 
