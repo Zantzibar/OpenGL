@@ -95,7 +95,7 @@
     </Link>
     <PreBuildEvent>
       <Command>xcopy "$(SolutionDir)freeglut\bin\freeglut.dll" "$(SolutionDir)Debug\" /Y/D
-xcopy "$(SolutionDir)GDV_Praktikum_OpenGL_NEU\Bilder\boden1.jpg" "$(SolutionDir)Debug\" /Y/D</Command>
+xcopy "$(SolutionDir)GDV_Praktikum_OpenGL_NEU\Bilder\boden1.jpg" "$(SolutionDir)Debug\Bilder\" /Y/D</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -166,6 +166,7 @@ xcopy "$(SolutionDir)GDV_Praktikum_OpenGL_NEU\Bilder\boden1.jpg" "$(SolutionDir)
     <ClCompile Include="Figure.cpp" />
     <ClCompile Include="teil_4.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Wuerfel.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
